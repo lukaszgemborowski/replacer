@@ -8,6 +8,7 @@
 
 // internal
 #include "view_item.hpp"
+#include "theme.hpp"
 
 // std library
 #include <iostream>
@@ -47,11 +48,16 @@ struct options
 template<class NcList, class Match>
 void print_match(NcList &list, const fs::path &p, const std::string &line, Match &match, const std::regex &re, const std::string &with)
 {
-    std::string replaced = std::regex_replace(
+    list.append(
+        replacer::view_item{
+            p,
             line,
+            match.position(),
+            match.length(),
             re,
-            with);
-    list.append(replacer::view_item{p, line, replaced});
+            with
+        }
+    );
 
 /* EXAMPLE: pretty print with crossed-out text and
  * highlited changed part assuming we can use CSI escape codes
@@ -113,15 +119,6 @@ void match_in_file(
     }
 }
 
-auto create_palette()
-{
-    using namespace ncursespp;
-    return palette {
-        color_pair{1_idx, color::white, color::black},
-        color_pair{2_idx, color::green, color::black},
-        color_pair{3_idx, color::red, color::black}
-    };
-}
 
 int main(int argc, char **argv)
 {
@@ -130,7 +127,7 @@ int main(int argc, char **argv)
     std::regex re{*opt.expression.value(), std::regex::optimize};
 
     auto ses = ncursespp::session{};
-    auto pal = create_palette();
+    replacer::create_theme();
 
     auto list = ncursespp::item_list<replacer::view_item>{};
 
@@ -142,11 +139,23 @@ int main(int argc, char **argv)
         }
     }
 
+    list.resize(ses.size());
     list.select(0);
     list.resize(ses.size());
     ses.refresh();
 
-    pause();
+    int c = 0;
+
+    while (c != 'q') {
+        c = ses.getkey();
+
+        if (c == 'k') {
+            list.select_up();
+        } else if (c == 'j') {
+            list.select_down();
+        }
+    }
+
 
     return 0;
 }
