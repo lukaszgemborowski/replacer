@@ -22,7 +22,6 @@ void view_item::draw(int line, bool selected, ncursespp::rect_i r) const
 
     if (line_before_.size() == 0 && line_after_.size() == 0) {
         ncursespp::draw::text(path_.string(), r, 1);
-        //ncursespp::draw::text(path_.string(), r, color_pair{color::white, color::black});
     } else {
         auto max_width = r.width();
         auto b_r = ncursespp::rect_i {
@@ -37,8 +36,6 @@ void view_item::draw(int line, bool selected, ncursespp::rect_i r) const
 
         ncursespp::draw::text(line_before_, b_r, 2);
         ncursespp::draw::text(line_after_, a_r, 3);
-        //ncursespp::draw::text(line_before_, b_r, color_pair{color::red, color::black});
-        //ncursespp::draw::text(line_after_, a_r, color_pair{color::green, color::black});
     }
 }
 
