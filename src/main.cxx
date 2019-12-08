@@ -18,7 +18,6 @@
 #include <experimental/filesystem>
 
 #include <ncurses.h>
-#include <unistd.h>
 
 namespace fs = std::experimental::filesystem;
 
@@ -45,57 +44,6 @@ struct options
     }
 };
 
-template<class NcList, class Match>
-void print_match(NcList &list, const fs::path &p, const std::string &line, Match &match, const std::regex &re, const std::string &with)
-{
-    list.append(
-        replacer::view_item{
-            p,
-            line,
-            match.position(),
-            match.length(),
-            re,
-            with
-        }
-    );
-
-/* EXAMPLE: pretty print with crossed-out text and
- * highlited changed part assuming we can use CSI escape codes
-
-    auto foundat = match.position();
-    auto length = match.length();
-    auto max_len = 40;
-
-    std::stringstream before;
-    before << line.substr(0, foundat);
-    before << "\x1b[31m\x1b[9m";
-    before << line.substr(foundat, length);
-    before << "\x1b[0m";
-    before << line.substr(foundat + length);
-
-    std::stringstream after;
-
-    std::string replaced = std::regex_replace(
-            line,
-            re,
-            with);
-    auto change_length = line.size() - replaced.size();
-
-    after << line.substr(0, foundat);
-    after << "\x1b[32m";
-    after << replaced.substr(foundat, length - change_length);
-    after << "\x1b[0m";
-    after << line.substr(foundat + length) << std::endl;
-
-    list.append(
-        replacer::view_item{
-            p,
-            before.str(),
-            after.str()
-        }
-    );*/
-}
-
 template<class NcList>
 void match_in_file(
     NcList &list,
@@ -114,7 +62,17 @@ void match_in_file(
 
         for (auto i = m; i != e; ++i) {
             auto match = *i;
-            print_match(list, p, line, match, re, with);
+
+            list.append(
+                replacer::view_item{
+                    p,
+                    line,
+                    match.position(),
+                    match.length(),
+                    re,
+                    with
+                }
+            );
         }
     }
 }
@@ -155,7 +113,6 @@ int main(int argc, char **argv)
             list.select_down();
         }
     }
-
 
     return 0;
 }
