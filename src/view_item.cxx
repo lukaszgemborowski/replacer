@@ -2,35 +2,20 @@
 #include "theme.hpp"
 #include <ncurses++/drawing.hpp>
 #include <array>
+#include <ncurses.h> // TODO: no attron/off support in ncurses++
 
 namespace replacer
 {
 
 view_item::view_item(const fs::path &p)
     : path_ {p}
-    , line_before_ {}
-    , line_after_ {}
+    , match_ {nullptr}
 {}
 
-view_item::view_item(const fs::path &p,
-              const std::string &line,
-              long position,
-              long length,
-              const std::regex &re,
-              const std::string &with)
+view_item::view_item(const fs::path &p, match &m)
     : path_ {p}
+    , match_ {&m}
 {
-    // TODO: remove duplicates
-    line_before_[0] = line.substr(0, position);
-    line_before_[1] = line.substr(position, length);
-    line_before_[2] = line.substr(position + length);
-
-    std::string res = std::regex_replace(line, re, with);
-    auto change_len = line.size() - res.size();
-
-    line_after_[0] = line.substr(0, position);
-    line_after_[1] = res.substr(position, length - change_len);
-    line_after_[2] = line.substr(position + length);
 }
 
 void view_item::draw(int line, bool selected, ncursespp::rect_i r) const
@@ -47,7 +32,7 @@ void view_item::draw(int line, bool selected, ncursespp::rect_i r) const
     };
 
 
-    if (line_before_[1].size() == 0 && line_after_[1].size() == 0) {
+    if (!match_) {
         ncursespp::draw::text(path_.string(), r, Colors[0][selected]);
     } else {
         auto make_rect = [&](int x, int y) {
@@ -57,22 +42,52 @@ void view_item::draw(int line, bool selected, ncursespp::rect_i r) const
             };
         };
 
-        int x = ncursespp::draw::text(line_before_[0], make_rect(0, 0), Colors[1][selected]);
-        x    += ncursespp::draw::text(line_before_[1], make_rect(x, 0), Colors[2][selected]);
-        ncursespp::draw::text(line_before_[2], make_rect(x, 0), Colors[1][selected]);
+        auto prefix = match_->prefix();
+        auto matched = match_->matched();
+        auto suffix = match_->suffix();
+        auto with = match_->replaced();
 
-        x  = ncursespp::draw::text(line_after_[0], make_rect(0, 1), Colors[3][selected]);
-        x += ncursespp::draw::text(line_after_[1], make_rect(x, 1), Colors[4][selected]);
-        ncursespp::draw::text(line_after_[2], make_rect(x, 1), Colors[3][selected]);
+        if (match_->for_apply()) {
+            attron(A_STANDOUT);
+        }
+
+        // text before the change
+        int x = 3;
+        x += ncursespp::draw::text(prefix, make_rect(x, 0), Colors[1][selected]);
+        x += ncursespp::draw::text(matched, make_rect(x, 0), Colors[2][selected]);
+             ncursespp::draw::text(suffix, make_rect(x, 0), Colors[1][selected]);
+
+        // text after the change
+        x = 3;
+        x += ncursespp::draw::text(prefix, make_rect(x, 1), Colors[3][selected]);
+        x += ncursespp::draw::text(with, make_rect(x, 1), Colors[4][selected]);
+             ncursespp::draw::text(suffix, make_rect(x, 1), Colors[3][selected]);
+
+        // fill reminign space on the left of the item
+        auto space = r;
+        space.right_bottom.x = 2;
+        space.right_bottom.y --; // FIXME: this is a bug
+        ncursespp::draw::fill_rect(space, Colors[1][selected]);
+
+        if (match_->for_apply()) {
+            attroff(A_STANDOUT);
+        }
     }
 }
 
 int view_item::height() const
 {
-    if (line_before_[1].size() == 0 && line_after_[1].size() == 0) {
+    if (!match_) {
         return 1;
     } else {
         return 2;
+    }
+}
+
+void view_item::accept()
+{
+    if (match_) {
+        match_->toggle_apply();
     }
 }
 

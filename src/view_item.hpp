@@ -1,6 +1,9 @@
 #ifndef REPLACER_VIEW_ITEM_HPP
 #define REPLACER_VIEW_ITEM_HPP
 
+#include "file.hpp"
+#include "match.hpp"
+
 #include <ncurses++/rect.hpp>
 #include <regex>
 #include <experimental/filesystem>
@@ -13,20 +16,15 @@ class view_item
 {
 public:
     view_item(const fs::path &p);
-    view_item(const fs::path &p,
-              const std::string &line,
-              long position,
-              long length,
-              const std::regex &re,
-              const std::string &with);
+    view_item(const fs::path &p, match &m);
 
     void draw(int line, bool selected, ncursespp::rect_i r) const;
     int height() const;
+    void accept();
 
 private:
     fs::path path_;
-    std::string line_before_[3];
-    std::string line_after_[3];
+    match *match_; // TODO: try to make it a reference
 };
 
 } // namespace replacer

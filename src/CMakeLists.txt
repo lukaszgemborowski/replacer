@@ -2,6 +2,7 @@ add_executable(
     replacer
     main.cxx
     view_item.cxx
+    file.cxx
 )
 
 target_link_libraries(
