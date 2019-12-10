@@ -17,14 +17,13 @@ namespace replacer
 struct file
 {
     file(const fs::path &p);
+    ~file();
 
     file() = delete;
     file(const file &) = delete;
     file(file &&) = delete;
     file& operator=(const file&) = delete;
     file& operator=(file&&) = delete;
-
-    void apply(matches &all);
 
     template<class... Args>
     void add_match(Args&&... args)
@@ -51,6 +50,7 @@ struct file
 
 
 private:
+    void apply();
     std::vector<std::string> load_file();
     void save(const std::vector<std::string> &l);
 

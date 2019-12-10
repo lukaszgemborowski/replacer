@@ -8,16 +8,21 @@ file::file(const fs::path &p)
 {
 }
 
+file::~file()
+{
+    apply();
+}
+
 bool file::has_matches() const
 {
     return !matches_.empty();
 }
 
-void file::apply(matches &all)
+void file::apply()
 {
     auto f = load_file();
 
-    for (const auto &m : all) {
+    for (const auto &m : matches_) {
         if (!m.for_apply())
             continue;
 
