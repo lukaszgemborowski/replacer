@@ -153,6 +153,12 @@ struct application
 int main(int argc, char **argv)
 {
     options opt{argc, argv};
+
+    if (!opt.expression || !opt.with) {
+        std::cerr << "You need to specify -w and -e to search and replace" << std::endl;
+        return 0;
+    }
+
     std::regex re{*opt.expression.value(), std::regex::optimize};
     auto ses = ncursespp::session{};
     replacer::create_theme();
