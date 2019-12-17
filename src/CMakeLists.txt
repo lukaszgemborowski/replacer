@@ -3,6 +3,7 @@ add_executable(
     main.cxx
     view_item.cxx
     file.cxx
+    application.cxx
 )
 
 target_link_libraries(
