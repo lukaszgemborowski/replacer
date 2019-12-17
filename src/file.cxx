@@ -18,6 +18,24 @@ bool file::has_matches() const
     return !matches_.empty();
 }
 
+void file::fill_matches(const std::regex &re, const std::string& with)
+{
+    iterate([this, &re, &with](auto no, const auto &line) {
+        auto m = std::sregex_iterator(line.begin(), line.end(), re);
+        auto e = std::sregex_iterator();
+
+        for (; m != e; ++m) {
+            std::string w = std::regex_replace(
+                line.substr(m->position(), m->length()),
+                re,
+                with
+            );
+
+            add_match(path_, no, line, w, m->position(), m->length());
+        }
+    });
+}
+
 void file::apply()
 {
     auto f = load_file();

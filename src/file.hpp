@@ -23,15 +23,23 @@ struct file
     file& operator=(const file&) = delete;
     file& operator=(file&&) = delete;
 
+
+    void fill_matches(const std::regex &re, const std::string& with);
+
+    bool has_matches() const;
+    auto& get_matches() { return matches_; }
+    const auto& path() const { return path_; }
+
+private:
+    void apply();
+    std::vector<std::string> load_file();
+    void save(const std::vector<std::string> &l);
+
     template<class... Args>
     void add_match(Args&&... args)
     {
         matches_.add(std::forward<Args>(args)...);
     }
-
-    bool has_matches() const;
-    auto& get_matches() { return matches_; }
-    const auto& path() const { return path_; }
 
     template<class Fun>
     void iterate(Fun f) const
@@ -45,12 +53,6 @@ struct file
             line ++;
         }
     }
-
-
-private:
-    void apply();
-    std::vector<std::string> load_file();
-    void save(const std::vector<std::string> &l);
 
 private:
     fs::path path_;

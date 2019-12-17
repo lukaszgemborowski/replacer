@@ -63,31 +63,7 @@ int application::run()
 void application::match_in_file(const fs::path &p)
 {
     replacer::file &f = files_.emplace(p, p).first->second;
-
-    f.iterate(
-        [this, &f, &p](int no, auto &line) {
-            auto m = std::sregex_iterator(
-                line.begin(),
-                line.end(),
-                re_);
-            auto e = std::sregex_iterator();
-
-            for (; m != e; ++m) {
-                std::string w = std::regex_replace(
-                    line.substr(m->position(), m->length()),
-                    re_,
-                    with_
-                );
-
-                // TODO: this is ok here but needs some thinking.
-                // matches are stored in file's internal vector and also as references
-                // in view_items. As match can be moved it can make a view_item
-                // reference dangling. I.e calling add_match after creating
-                // view_item can break the app!
-                f.add_match(p, no, line, w, m->position(), m->length());
-            }
-        }
-    );
+    f.fill_matches(re_, with_);
 
     if (!f.has_matches())
         return;
