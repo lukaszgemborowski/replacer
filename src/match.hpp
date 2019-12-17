@@ -1,11 +1,9 @@
 #ifndef REPLACER_MATCH_HPP
 #define REPLACER_MATCH_HPP
 
+#include "filesystem.hpp"
 #include <string>
 #include <vector>
-
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 
 namespace replacer
 {

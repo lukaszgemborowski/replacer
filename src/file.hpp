@@ -2,14 +2,12 @@
 #define REPLACER_FILE_HPP
 
 #include "match.hpp"
+#include "filesystem.hpp"
 
 #include <string>
 #include <vector>
 #include <fstream>
 #include <regex>
-#include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
 
 namespace replacer
 {

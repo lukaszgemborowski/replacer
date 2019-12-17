@@ -1,6 +1,3 @@
-// args library
-#include <args/args.hpp>
-
 // ncurses++ library
 #include <ncurses++/session.hpp>
 #include <ncurses++/item_list.hpp>
@@ -11,6 +8,7 @@
 #include "theme.hpp"
 #include "file.hpp"
 #include "match.hpp"
+#include "options.hpp"
 
 // std library
 #include <iostream>
@@ -19,32 +17,6 @@
 #include <sstream>
 #include <map>
 #include <set>
-#include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
-
-struct options
-{
-    args::opt<std::string> expression{'e'};
-    args::opt<std::string> with{'w'};
-    std::vector<char *> args;
-
-    options(int argc, char **argv)
-    {
-        args::parser p{expression, with};
-        p.parse(argc, argv);
-        args = std::move(p.posargs());
-    }
-
-    fs::path search_dir() const
-    {
-        if (args.size()) {
-            return args[0];
-        } else {
-            return fs::current_path();
-        }
-    }
-};
 
 class file_collector
 {
@@ -152,7 +124,7 @@ struct application
 
 int main(int argc, char **argv)
 {
-    options opt{argc, argv};
+    replacer::options opt{argc, argv};
 
     if (!opt.expression || !opt.with) {
         std::cerr << "You need to specify -w and -e to search and replace" << std::endl;

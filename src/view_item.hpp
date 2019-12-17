@@ -3,11 +3,10 @@
 
 #include "file.hpp"
 #include "match.hpp"
+#include "filesystem.hpp"
 
 #include <ncurses++/rect.hpp>
 #include <regex>
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 
 namespace replacer
 {
