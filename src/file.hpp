@@ -23,7 +23,6 @@ struct file
     file& operator=(const file&) = delete;
     file& operator=(file&&) = delete;
 
-
     void fill_matches(const std::regex &re, const std::string& with);
 
     bool has_matches() const;
@@ -34,12 +33,6 @@ private:
     void apply();
     std::vector<std::string> load_file();
     void save(const std::vector<std::string> &l);
-
-    template<class... Args>
-    void add_match(Args&&... args)
-    {
-        matches_.add(std::forward<Args>(args)...);
-    }
 
     template<class Fun>
     void iterate(Fun f) const
@@ -56,7 +49,7 @@ private:
 
 private:
     fs::path path_;
-    matches matches_;
+    std::vector<match> matches_;
 };
 
 } // namespace replacer

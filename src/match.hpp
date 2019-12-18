@@ -72,32 +72,6 @@ private:
     bool apply_;
 };
 
-class matches
-{
-public:
-    template<class... Args>
-    void add(Args&&... args)
-    {
-        matches_.emplace_back(std::forward<Args>(args)...);
-    }
-
-    template<class... Args>
-    void emplace_back(Args&&... args)
-    {
-        matches_.emplace_back(std::forward<Args>(args)...);
-    }
-
-    auto empty() const { return matches_.empty(); }
-
-    auto begin() { return matches_.begin(); }
-    auto begin() const { return matches_.begin(); }
-    auto end() { return matches_.end(); }
-    auto end() const { return matches_.end(); }
-
-private:
-    std::vector<match> matches_;
-};
-
 } // namespace replacer
 
 #endif // REPLACER_MATCH_HPP

@@ -31,7 +31,7 @@ void file::fill_matches(const std::regex &re, const std::string& with)
                 with
             );
 
-            add_match(path_, no, line, w, m->position(), m->length());
+            matches_.emplace_back(path_, no, line, w, m->position(), m->length());
         }
     });
 }
