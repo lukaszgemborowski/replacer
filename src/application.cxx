@@ -1,26 +1,5 @@
 #include "application.hpp"
-
-namespace
-{
-class file_collector
-{
-public:
-    file_collector() {}
-
-    template<class Fun>
-    void walk(const fs::path &path, Fun f)
-    {
-        for (auto &p : fs::recursive_directory_iterator{path}) {
-            if (fs::is_regular_file(p.status())) {
-                if (p.path().filename().string()[0] == '.')
-                    continue;
-
-                f (p);
-            }
-        }
-    }
-};
-}
+#include <set>
 
 namespace replacer
 {
@@ -30,13 +9,23 @@ application::application(ncursespp::session &ses, const fs::path &path, const st
     , re_ {re}
     , with_ {with}
     , list_ {}
+    , search_ {path, re, with}
 {
 }
 
 int application::run()
 {
-    file_collector collector;
-    collector.walk(path_, [this](auto &e) { match_in_file(e.path()); });
+    std::set<fs::path> found;
+    search_.search(
+        [this, &found](auto &p, auto &m) {
+            if (!found.count(p)) {
+                found.insert(p);
+                list_.append(view_item{p});
+            }
+
+            list_.append(view_item{p, m});
+        }
+    );
 
     list_.resize(ses_.size());
     list_.select(0);
@@ -60,17 +49,4 @@ int application::run()
     return 0;
 }
 
-void application::match_in_file(const fs::path &p)
-{
-    replacer::file &f = files_.emplace(p, p).first->second;
-    f.fill_matches(re_, with_);
-
-    if (!f.has_matches())
-        return;
-
-    list_.append(replacer::view_item{p});
-    for (auto &m : f.get_matches()) {
-        list_.append(replacer::view_item{p, m});
-    }
-}
 } // namespace replacer

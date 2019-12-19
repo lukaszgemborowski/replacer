@@ -4,6 +4,7 @@ add_executable(
     view_item.cxx
     file.cxx
     application.cxx
+    search_results.cxx
 )
 
 target_link_libraries(

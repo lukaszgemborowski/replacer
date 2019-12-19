@@ -3,6 +3,7 @@
 
 #include "filesystem.hpp"
 #include "view_item.hpp"
+#include "search_results.hpp"
 #include <ncurses++/session.hpp>
 #include <ncurses++/item_list.hpp>
 #include <regex>
@@ -24,7 +25,6 @@ public:
     application& operator=(application &&) = delete;
 
     int run();
-    void match_in_file(const fs::path &p);
 
 private:
     using ItemList = ncursespp::item_list<view_item>;
@@ -35,7 +35,7 @@ private:
     const std::regex    &re_;
     const std::string&  with_;
     ItemList            list_;
-    FileMap             files_;
+    search_results      search_;
 };
 
 } // namespace replacer
