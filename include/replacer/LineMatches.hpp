@@ -5,6 +5,7 @@
 #include <replacer/NamedValue.hpp>
 #include <variant>
 #include <regex>
+#include <string_view>
 
 namespace replacer
 {
@@ -41,9 +42,15 @@ public:
     }
 
     const auto& getMatches() const { return matches_; }
+    auto matchedString(const MatchSpan &span) const
+    {
+        return std::string_view{
+            line_.c_str() + span.position(),
+            static_cast<std::string_view::size_type>(span.length())};
+    }
 
 private:
-    unsigned                lineNumber_;
+    LineNumber::type        lineNumber_;
     std::string             line_;
     std::vector<MatchSpan>  matches_;
 };
