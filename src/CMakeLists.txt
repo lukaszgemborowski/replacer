@@ -1,10 +1,7 @@
 add_library(
     replacer
     STATIC
-    # view_item.cxx
-    file.cxx
-    # application.cxx
-    search_results.cxx
+    empty.cxx
 )
 
 target_link_libraries(
@@ -15,4 +12,14 @@ target_link_libraries(
 
     # GCC use -lstdc++fs
     stdc++fs
+)
+
+target_compile_features(
+    replacer PUBLIC cxx_std_17
+)
+
+target_include_directories(
+    replacer
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
