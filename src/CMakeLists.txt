@@ -13,5 +13,8 @@ target_link_libraries(
     args
 
     # clang 6.0.1 @ FreeBSD, needs to be fixed for GCC and other platforms
-    c++experimental
+    # c++experimental
+
+    # GCC use -lstdc++fs
+    stdc++fs
 )
