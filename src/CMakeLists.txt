@@ -1,7 +1,7 @@
 add_library(
     replacer
     STATIC
-    empty.cxx
+    LineReplacer.cxx
 )
 
 target_link_libraries(

@@ -17,10 +17,11 @@ class NoMatches {};
 class LineMatches
 {
 public:
-    LineMatches(LineNumber number, const std::string &line, std::vector<MatchSpan> &&matches)
+    LineMatches(LineNumber number, const std::string &line, std::vector<MatchSpan> &&matches, std::regex &re)
         : lineNumber_ {number}
         , line_ {line}
         , matches_ {std::move(matches)}
+        , re_ {re}
     {}
 
     using CreateResult = std::variant<NoMatches, LineMatches>;
@@ -37,7 +38,7 @@ public:
         if (matches.empty()) {
             return NoMatches{};
         } else {
-            return LineMatches{number, line, std::move(matches)};
+            return LineMatches{number, line, std::move(matches), re};
         }
     }
 
@@ -49,10 +50,26 @@ public:
             static_cast<std::string_view::size_type>(span.length())};
     }
 
+    const auto& line() const
+    {
+        return line_;
+    }
+
+    auto lineNumber() const
+    {
+        return LineNumber{lineNumber_};
+    }
+
+    auto& regexp() const
+    {
+        return re_;
+    }
+
 private:
     LineNumber::type        lineNumber_;
     std::string             line_;
     std::vector<MatchSpan>  matches_;
+    std::regex&             re_;
 };
 
 } // namespace replacer
