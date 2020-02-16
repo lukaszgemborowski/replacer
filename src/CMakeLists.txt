@@ -1,16 +1,14 @@
-add_executable(
+add_library(
     replacer
-    main.cxx
-    view_item.cxx
+    STATIC
+    # view_item.cxx
     file.cxx
-    application.cxx
+    # application.cxx
     search_results.cxx
 )
 
 target_link_libraries(
     replacer
-    ncurses++
-    args
 
     # clang 6.0.1 @ FreeBSD, needs to be fixed for GCC and other platforms
     # c++experimental
