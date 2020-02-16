@@ -2,6 +2,7 @@ add_library(
     replacer
     STATIC
     LineReplacer.cxx
+    FileMatches.cxx
 )
 
 target_link_libraries(

@@ -13,6 +13,10 @@ public:
     {}
 
     operator T () const { return value_; }
+    const T& operator * () const
+    {
+        return value_;
+    }
 
     using type = T;
 

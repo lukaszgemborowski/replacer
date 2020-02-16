@@ -3,6 +3,7 @@ add_executable(
     main.cxx
     LineMatchesTests.cxx
     LineReplacerTests.cxx
+    FileMatchesTests.cxx
 )
 
 target_link_libraries(
