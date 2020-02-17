@@ -43,11 +43,22 @@ public:
     }
 
     const auto& getMatches() const { return matches_; }
+
     auto matchedString(const MatchSpan &span) const
     {
         return std::string_view{
             line_.c_str() + span.position(),
             static_cast<std::string_view::size_type>(span.length())};
+    }
+
+    auto beforeMatch(const MatchSpan &span) const
+    {
+        return std::string_view {line_.c_str(), static_cast<std::size_t>(span.position())};
+    }
+
+    auto afterMatch(const MatchSpan &span) const
+    {
+        return std::string_view {line_.c_str() + span.position() + span.length()};
     }
 
     const auto& line() const

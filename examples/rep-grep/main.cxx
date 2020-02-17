@@ -3,7 +3,10 @@
 
 void print_entry(const fs::path &path, const replacer::LineMatches &lm, replacer::MatchSpan span)
 {
-    std::cout << path << ":" << lm.lineNumber() << ": " << lm.matchedString(span) << std::endl;
+    std::cout << path << ":" << lm.lineNumber() << ": "
+        << lm.beforeMatch(span)
+        << "\x1b[32m" << lm.matchedString(span) << "\x1b[0m"
+        << lm.afterMatch(span) << std::endl;
 }
 
 int main(int argc, char **argv)
