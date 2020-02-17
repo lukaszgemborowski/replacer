@@ -10,7 +10,7 @@ namespace replacer::utils
 
 struct OpenFileStream
 {
-    std::ifstream operator()(fs::path &path) const
+    std::ifstream operator()(const fs::path& path) const
     {
         return std::ifstream {path};
     }

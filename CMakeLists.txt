@@ -4,3 +4,4 @@ project (libreplacer)
 # replacer
 add_subdirectory(src)
 add_subdirectory(tests)
+add_subdirectory(examples/rep-grep)
