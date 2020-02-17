@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include <replacer/FileMatches.hpp>
+#include <sstream>
 
 using namespace std::string_literals;
 using namespace std::string_view_literals;

@@ -14,7 +14,7 @@ namespace detail
 
 struct LineCompare
 {
-    bool operator()(const LineMatches &l1, const LineMatches &l2) {
+    bool operator()(const LineMatches &l1, const LineMatches &l2) const {
         return *l1.lineNumber() < *l2.lineNumber();
     }
 };
