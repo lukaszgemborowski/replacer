@@ -31,6 +31,9 @@ public:
 
     std::size_t size() const;
 
+    detail::LineMatchesSet::const_iterator begin() const;
+    detail::LineMatchesSet::const_iterator end() const;
+
 private:
     FileMatches(fs::path filename, detail::LineMatchesSet &&matchesSet);
 

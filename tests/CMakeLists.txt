@@ -4,6 +4,7 @@ add_executable(
     LineMatchesTests.cxx
     LineReplacerTests.cxx
     FileMatchesTests.cxx
+    FileMatchesIterationTests.cxx
 )
 
 target_link_libraries(

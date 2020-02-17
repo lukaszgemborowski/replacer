@@ -34,6 +34,16 @@ FileMatches FileMatches::Create(fs::path filename, std::regex &re, std::istream 
     return FileMatches{filename, std::move(matches)};
 }
 
+detail::LineMatchesSet::const_iterator FileMatches::begin() const
+{
+    return matches_.begin();
+}
+
+detail::LineMatchesSet::const_iterator FileMatches::end() const
+{
+    return matches_.end();
+}
+
 std::size_t FileMatches::size() const
 {
     return matches_.size();

@@ -65,6 +65,21 @@ public:
         return re_;
     }
 
+    auto size() const
+    {
+        return matches_.size();
+    }
+
+    auto begin() const
+    {
+        return matches_.begin();
+    }
+
+    auto end() const
+    {
+        return matches_.end();
+    }
+
 private:
     LineNumber::type        lineNumber_;
     std::string             line_;
