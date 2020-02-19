@@ -6,6 +6,7 @@ namespace
 const auto TEXT_GREEN = "\x1b[32m";
 const auto TEXT_RED = "\x1b[31m";
 const auto TEXT_RESET = "\x1b[0m";
+const auto TEXT_STRIKE = "\x1b[9m";
 }
 
 class GrepPrinter
@@ -31,8 +32,8 @@ public:
     {
         std::cout << path << ":" << lm.lineNumber()
                   << lm.beforeMatch(span)
-                  << TEXT_RED << lm.matchedString(span)
-                  << TEXT_GREEN << std::regex_replace(std::string{lm.matchedString(span)}, lm.regexp(), replaceWith_)
+                  << TEXT_RED << TEXT_STRIKE << lm.matchedString(span)
+                  << TEXT_RESET << TEXT_GREEN << std::regex_replace(std::string{lm.matchedString(span)}, lm.regexp(), replaceWith_)
                   << TEXT_RESET << lm.afterMatch(span) << std::endl;
     }
 
